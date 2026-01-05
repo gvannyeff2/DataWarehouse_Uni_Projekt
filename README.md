@@ -9,15 +9,7 @@ University Project
 
 ## Docker Container
 
-## First Use Apache Superset
 
-**Admin erstellen**
-
-```cmd
-docker exec -it [container-name] superset fab create-admin
-docker exec -it [container-name] superset db upgrade
-docker exec -it [container-name] superset init
-```
 
 
 

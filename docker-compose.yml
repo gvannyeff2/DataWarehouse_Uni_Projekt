@@ -1,73 +1,36 @@
 version: '3.8'
 
 services:
-  postgres_db:
+  # 1. Die Datenbank (wie vorher)
+  db:
     image: postgres:15
-    container_name: diabetes-db
+    container_name: health_dwh_postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: diabetes_dwh
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: health_dwh
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./datenquellen:/data:ro           # mount your data files into container
-    networks:
-      - dwh-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d diabetes_dwh"]
+      test: ["CMD-SHELL", "pg_isready -U admin -d health_dwh"]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 5
 
-  etl_pipeline:
-    image: python:3.10-slim
-    container_name: diabetes-etl
-    volumes:
-      - .:/app
-      - ./datenquellen:/data:ro
-    working_dir: /app
-    environment:
-      # DB connection used by the ETL script. The host here is the service name (postgres_db).
-      - DB_HOST=postgres_db
-      - DB_PORT=5432
-      - DB_NAME=diabetes_dwh
-      - DB_USER=postgres
-      - DB_PASSWORD=admin
-    depends_on:
-      postgres_db:
-        condition: service_healthy
-    command: bash -c "pip install -r requirements.txt && python etl_pipeline.py"
-    networks:
-      - dwh-network
-
-  superset:
+  # 2. Dein Python ETL-Skript (NEU)
+  etl:
     build: .
-    container_name: diabetes-superset
-    environment:
-      - SUPERSET_LOAD_EXAMPLES=no
-      - SUPERSET_SECRET_KEY=change_me_in_prod
-    ports:
-      - "8088:8088"
+    container_name: health_dwh_etl
     depends_on:
-      postgres_db:
+      db:
         condition: service_healthy
-    command: >
-      /bin/sh -c "
-      superset db upgrade &&
-      superset init &&
-      superset run -p 8088 -h 0.0.0.0
-      "
-    networks:
-      - dwh-network
+    environment:
+      - DB_HOST=db  # Wichtig: Im Docker-Netzwerk heißt der Host 'db', nicht localhost
     volumes:
-      - superset_home:/app/superset_home
-
-networks:
-  dwh-network:
-    driver: bridge
+      # Wir mounten den Ordner, damit Output-Dateien (falls vorhanden) auf deinem PC landen
+      - .:/app
 
 volumes:
   postgres_data:
-  superset_home:
