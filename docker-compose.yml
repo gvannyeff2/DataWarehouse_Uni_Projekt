@@ -1,25 +1,23 @@
 version: '3.8'
 
 services:
-  # 1. Die Datenbank (wie vorher)
   db:
     image: postgres:15
     container_name: health_dwh_postgres
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password123
-      POSTGRES_DB: health_dwh
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin -d health_dwh"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
 
-  # 2. Dein Python ETL-Skript (NEU)
   etl:
     build: .
     container_name: health_dwh_etl
@@ -27,9 +25,13 @@ services:
       db:
         condition: service_healthy
     environment:
-      - DB_HOST=db  # Wichtig: Im Docker-Netzwerk heißt der Host 'db', nicht localhost
+      - DB_HOST=db
+      # Wir reichen die Variablen aus der .env an den Python Container weiter
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PORT=${POSTGRES_PORT}
     volumes:
-      # Wir mounten den Ordner, damit Output-Dateien (falls vorhanden) auf deinem PC landen
       - .:/app
 
 volumes:
