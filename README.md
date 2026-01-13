@@ -1,7 +1,22 @@
-# DataWarehouse_Projekt_WiSe25-26
-University Project
+# Data-Warehouse-Projekt (Universitätsprojekt)
 
-## Aufgaben
+Dieses Repository enthält ein Data-Warehouse-Projekt, das im Rahmen eines Universitätskurses im Masterstudium **Medical Data Science** entwickelt wurde.
+
+## Projektkontext
+Ziel des Projekts ist die Planung und Umsetzung einer Data-Warehouse-Lösung, einschließlich Datenmodellierung und automatisierter ETL-Pipelines. Das Projekt dient **akademischen Zwecken** und wurde zu Lern- und Demonstrationszwecken erstellt.
+
+## Datenquellen
+Die verwendeten Rohdaten stammen aus öffentlich zugänglichen Quellen des **Robert Koch-Instituts (RKI)** im CSV- und TSV-Format.
+
+## Umfang
+- Analyse von Rohdaten zur Identifikation relevanter Felder und Strukturen  
+- Konzeption eines Data-Warehouse-Schemas inkl. ER-Diagramm  
+- Implementierung automatisierter ETL-Pipelines mit Python  
+- Speicherung der bereinigten Daten in einer PostgreSQL-Datenbank  
+- Geplante Integration von Power BI zur Datenanalyse und -visualisierung
+
+## Status
+Das Projekt ist **laufend**. Weitere Erweiterungen, einschließlich zusätzlicher Transformationen und Power-BI-Dashboards, sind geplant.
 
 ## ER-Diagramm
 
@@ -12,8 +27,6 @@ University Project
 
 ### Version 1
 ![ERD](Documentations/erd.png)
-
-## Docker Container
 
 
 
