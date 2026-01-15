@@ -13,4 +13,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Standard-Befehl: Das ETL-Skript ausführen
-CMD ["python", "etl_pipeline.py"]
+CMD ["python", "main.py"]
