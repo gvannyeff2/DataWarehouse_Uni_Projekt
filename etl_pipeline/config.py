@@ -23,18 +23,31 @@ FILE_GESUNDHEIT = os.path.join(DATA_DIR, 'Gesundheit_in_Deutschland_aktuell_-_20
 URL_DIABETES = os.environ.get('URL_DIABETES')
 URL_GESUNDHEIT = os.environ.get('URL_GESUNDHEIT')
 
-
 # Mapping und Liste
+
+## Kombination von Regionen in DE
 COMBI_REGIONS = [
     'Nordost', 'Nordwest', 'Mitte-Ost', 'Mitte-West', 'Süden',
     'Ost', 'West'
 ]
 
+COMBI_REGION_DESCRIPTION = {
+    'Nordost': 'Berlin, Brandenburg, Mecklenburg-Vorpommern',
+    'Nordwest': 'Schleswig-Holstein, Hamburg, Niedersachsen, Bremen',
+    'Mitte-Ost': 'Sachsen, Sachsen-Anhalt, Thüringen',
+    'Mitte-West': 'Nordrhein-Westfalen, Hessen, Rheinland-Pfalz, Saarland',
+    'Süden': 'Baden-Württemberg, Bayern',
+    'Ost': 'Berlin, Brandenburg, Mecklenburg-Vorpommern, Sachsen, Sachsen-Anhalt, Thüringen',
+    'West': 'Baden-Württemberg, Bayern, Bremen, Hamburg, Hessen, Niedersachsen, Nordrhein-Westfalen, Rheinland-Pfalz, Saarland, Schleswig-Holstein'
+}
+
+## Geschlecht
 GENDER_MAP = {
     'Männlich': 'Männlich', 'Weiblich': 'Weiblich', 'Gesamt': 'Gesamt', 
     'Männer': 'Männlich', 'Frauen': 'Weiblich'
 }
 
+## Gesundheitsindikatoren aus GEDA
 GEDA_MAPPING = {
     'AMarztB': 'Medikamenteneinnahme (ärztlich verordnet)',
     'GVzahnsa_k': 'Mundgesundheit',

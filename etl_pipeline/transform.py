@@ -15,12 +15,27 @@ def get_iso_code(region_name):
     return None
 
 def determine_category(row):
+    """
+    Fügt automatisch die ISO Codes für Ländern bzw. Regionen in DE
+    """
     name, iso = row['name'], row['iso_code']
-    if name == 'Deutschland': return 'Land'
-    if name in config.COMBI_REGIONS: return 'Kombinationsregion'
-    if iso and iso.startswith('DE-'): return 'Bundesland'
-    if iso and len(iso) == 2: return 'Land'
+    if name == 'Deutschland': 
+        return 'Land'
+    if name in config.COMBI_REGIONS: 
+        return 'Kombinationsregion'
+    if iso and iso.startswith('DE-'): 
+        return 'Bundesland'
+    if iso and len(iso) == 2: 
+        return 'Land'
     return 'Unbekannt'
+
+def get_geo_description(row):
+    """
+    Fügt für Kombinationsregionen die Liste der Bundesländer hinzu.
+    """
+    if row['kategorie'] == 'Kombinationsregion':
+        return config.COMBI_REGION_DESCRIPTION.get(row['name'], "")
+    return ""
 
 def transform_data(df_diab, df_ges):
     """
@@ -37,8 +52,8 @@ def transform_data(df_diab, df_ges):
     
     df_diab['ind_name'] = df_diab['Indikator_Name']
     df_diab['ind_cat'] = "Diabetes Surveillance"
-    df_diab['ind_unit'] = df_diab['Kennzahl_Definition'] # Fix: Einheit aus Definition
-    df_diab['ind_desc'] = "Datenquelle: Diabetes Surveillance RKI"
+    df_diab['ind_unit'] = df_diab['Kennzahl_Definition']
+    df_diab['ind_desc'] = ""
 
     ## GEDA Daten
     df_ges['clean_gender'] = df_ges['Gender'].map(config.GENDER_MAP).fillna('Unbekannt')
@@ -49,8 +64,8 @@ def transform_data(df_diab, df_ges):
     df_ges['ind_cat'] = "GEDA Survey"
     df_ges['ind_unit'] = "Prozent"
     df_ges['Variable'] = df_ges['Variable'].astype(str).str.strip()
-    df_ges['ind_name'] = df_ges['Variable']
-    df_ges['ind_desc'] = df_ges['Variable'].map(config.GEDA_MAPPING).fillna("Code: " + df_ges['Variable'])
+    df_ges['ind_name'] = df_ges['Variable'].map(config.GEDA_MAPPING).fillna(df_ges['Variable'])
+    df_ges['ind_desc'] = df_ges['Variable']
 
     # DIMENSIONEN ERSTELLEN
     
@@ -59,7 +74,8 @@ def transform_data(df_diab, df_ges):
     dim_geo = pd.DataFrame(list(all_regions), columns=['name'])
     dim_geo['iso_code'] = dim_geo['name'].apply(get_iso_code)
     dim_geo['kategorie'] = dim_geo.apply(determine_category, axis=1)
-    dim_geo = dim_geo[dim_geo['kategorie'] != 'Unbekannt'].copy()
+    dim_geo = dim_geo[dim_geo['kategorie'] != 'Unbekannt'].copy() 
+    dim_geo['beschreibung'] = dim_geo.apply(get_geo_description, axis=1)
     dim_geo.sort_values(['kategorie', 'name'], inplace=True)
     dim_geo['geographie_id'] = range(1, len(dim_geo) + 1)
 
