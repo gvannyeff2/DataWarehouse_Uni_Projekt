@@ -28,6 +28,13 @@ Das Projekt ist **laufend**. Weitere Erweiterungen, einschließlich zusätzliche
 ### Version 1
 ![ERD](Documentations/erd.png)
 
+## Architekturdiagramm
 
+## Wichtige Befehle zum Ausführen
+
+```cmd
+docker compose up --build
+docker compose down
+````
 
 
