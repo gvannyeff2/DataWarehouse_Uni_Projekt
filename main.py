@@ -1,4 +1,4 @@
-import time
+import time, sys
 from etl_pipeline import extract, transform, load
 
 def run_pipeline():
@@ -20,22 +20,9 @@ def run_pipeline():
         print(f"Fehler in Pipeline: {e}")
 
 if __name__ == "__main__":
-    print("ETL Service gestartet (Auto-Aktualisierung)...")
-    
-    # Initialer Lauf
-    run_pipeline()
-    
-    # Watcher Loop
-    while True:
-        try:
-            print(f">>> Watcher aktiv - {time.ctime()}... (Prüfung alle 60s)")
-            
-            run_pipeline()
-            
-            time.sleep(60) 
-        except KeyboardInterrupt:
-            print("Watcher beendet.")
-            break
-        except Exception as e:
-            print(f"Fehler im Watcher Loop: {e}")
-            time.sleep(60)
+    try:
+        run_pipeline()
+        sys.exit(0)   
+    except Exception as e:
+        print(f"ETL Fehler: {e}")
+        sys.exit(1) 
