@@ -26,11 +26,14 @@ services:
         condition: service_healthy
     environment:
       - DB_HOST=db
-      # Wir reichen die Variablen aus der .env an den Python Container weiter
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_PORT=${POSTGRES_PORT}
+
+      # Rohdaten URLs
+      - URL_DIABETES=${URL_DIABETES}
+      - URL_GESUNDHEIT=${URL_GESUNDHEIT}
     volumes:
       - .:/app
 
