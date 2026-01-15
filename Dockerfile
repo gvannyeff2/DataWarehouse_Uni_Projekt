@@ -9,4 +9,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ["python", "main.py"]
+CMD ["bash", "-c", "airflow db init && airflow scheduler & airflow webserver"] 
+# CMD ["python", "main.py"]
