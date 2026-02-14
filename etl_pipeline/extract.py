@@ -22,7 +22,7 @@ def download_rawfile(url, local_path):
             local_size = os.path.getsize(local_path)
             
         if local_size != remote_size or local_size == 0:
-            print(f"-> Start Download ({remote_size / 1024 / 1024:.2f} MB)...")
+            print(f"Herunterladen starten ({remote_size / 1024 / 1024:.2f} MB)...")
             response = requests.get(url, stream=True, timeout=60)
             if response.status_code == 200:
                 with open(local_path, 'wb') as f:
@@ -33,17 +33,17 @@ def download_rawfile(url, local_path):
                         # Einfacher Log alle 5 MB damit man sieht dass es lebt
                         if downloaded % (5 * 1024 * 1024) < 8192: 
                             print(f"   ... {downloaded / 1024 / 1024:.2f} MB geladen")
-                print("-> Download vollständig!")
+                print("Herunterladen fertig")
                 return True
             else:
-                print(f"-> Fehler: Status {response.status_code}")
+                print(f"Fehler: Status {response.status_code}")
                 return False
         else:
-            print("-> Datei ist aktuell.")
+            print("Datei ist aktuell.")
             return False
             
     except Exception as e:
-        print(f"-> Fehler beim Download: {e}")
+        print(f"Fehler beim Herunterladen: {e}")
         return False
 
 def extract_data():

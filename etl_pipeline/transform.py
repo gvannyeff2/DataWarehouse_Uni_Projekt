@@ -74,7 +74,13 @@ def transform_data(df_diab, df_ges):
     dim_geo = pd.DataFrame(list(all_regions), columns=['name'])
     dim_geo['iso_code'] = dim_geo['name'].apply(get_iso_code)
     dim_geo['kategorie'] = dim_geo.apply(determine_category, axis=1)
-    dim_geo = dim_geo[dim_geo['kategorie'] != 'Unbekannt'].copy() 
+    
+    ### Nur DE und seine Regionen sind gespeichert
+    dim_geo = dim_geo[
+        (dim_geo['kategorie'] != 'Unbekannt') & (
+            (dim_geo['kategorie'] != 'Land') | (dim_geo['name'] == 'Deutschland')
+        )].copy() 
+    
     dim_geo['beschreibung'] = dim_geo.apply(get_geo_description, axis=1)
     dim_geo.sort_values(['kategorie', 'name'], inplace=True)
     dim_geo['geographie_id'] = range(1, len(dim_geo) + 1)
