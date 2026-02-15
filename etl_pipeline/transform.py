@@ -56,8 +56,9 @@ def get_geo_description(row):
         return config.COMBI_REGION_DESCRIPTION.get(row.get('name'), "")
     return ""
 
+# Regex fuer typische GEDA-Altersgruppen (z.B. "18 - 29 Jahre")
 _geda_age_re = re.compile(r'^\s*(\d+)\s*-\s*(\d+)\s*Jahre\s*$', flags=re.IGNORECASE)
-_geda_age_plus_re = re.compile(r'^\s*(\d+)\s*\+?\s*(?:Jahre)?\s*$', flags=re.IGNORECASE)
+#_geda_age_plus_re = re.compile(r'^\s*(\d+)\s*\+?\s*(?:Jahre)?\s*$', flags=re.IGNORECASE)
 
 def normalize_geda_age(age_str):
     """
@@ -105,7 +106,7 @@ def normalize_edu(value):
 
 def diabetes_keep_row(row):
     """
-    Diabetes: Zeilenfilter für 18+ Vergleichbarkeit mit GEDA.
+    Filtert Diabetes Survelliance, sodass mit GEDA vergleichbar ist
     Lebensphase_ID = 0 behalten (also Erwachsene). Der Rest wurde weggeworfen
     """
     lp = row.get('Lebensphase_ID')
@@ -123,7 +124,7 @@ def diabetes_keep_row(row):
     if lp == 1:
         return False
 
-    # Erwachsene: Alter kann '00+' sein (= Gesamt Erwachsene)
+    # Erwachsene
     if lp == 0:
         if pd.isna(age):
             return True
@@ -132,7 +133,7 @@ def diabetes_keep_row(row):
             return True
         return is_adult_age(age)
 
-    # Alle Altersgruppen: nur 18+ Altersgruppen behalten
+    # Alle Altersgruppen aber nur 18+ Altersgruppen behalten
     if lp == 2:
         if pd.isna(age):
             return False
@@ -146,7 +147,7 @@ def diabetes_keep_row(row):
 
 def is_adult_age(age_id):
     """
-    True, wenn die Altersgruppe ab 18 beginnt (z.B. 18-29, 65+).
+    True, wenn die Altersgruppe ab 18 beginnt (z.B. 18-29, 65+)
     """
     if pd.isna(age_id):
         return False
@@ -177,7 +178,7 @@ def is_adult_age(age_id):
 
 def diabetes_clean_age(row):
     """
-    Harmonisiert Diabetes-Alter
+    Harmonisiert Alter in Diabetes Survelliance
     """
     age = row.get('Alter_ID')
     lp = row.get('Lebensphase_ID')
@@ -196,7 +197,6 @@ def diabetes_clean_age(row):
         return "Gesamt"
     return age
 
-# Daten transformieren
 def transform_data(df_diab, df_ges):
     """
     Führt alle Transformationen durch und erstellt die Dimensionen und Fakten.
@@ -204,7 +204,6 @@ def transform_data(df_diab, df_ges):
     print("Daten transformieren...")
 
     # Diabetes Daten reinigen und filtern
-    # Lebensphase_ID numerisch
     if 'Lebensphase_ID' in df_diab.columns:
         df_diab = df_diab.copy()
         df_diab['Lebensphase_ID'] = pd.to_numeric(df_diab['Lebensphase_ID'], errors='coerce')
@@ -215,12 +214,13 @@ def transform_data(df_diab, df_ges):
         print("WARNUNG: Spalte 'Lebensphase_ID' nicht gefunden! Diabetes wird nicht altersgefiltert.")
         df_diab = df_diab.copy()
 
+    ## Harmonisierung fuer Gender/Region/Age/Edu
     df_diab['clean_gender'] = df_diab['Geschlecht_Name'].map(config.GENDER_MAP).fillna('Unbekannt')
     df_diab['clean_region'] = df_diab['Region_Name'].astype(str).str.strip()
     df_diab['clean_age'] = df_diab.apply(diabetes_clean_age, axis=1)
     df_diab['clean_edu'] = df_diab['Bildung_Casmin_Name'].apply(normalize_edu)
 
-    # Nur Deutschland / Bundesländer / Kombinationsregionen
+    ## Nur Deutschland/Bundeslaender/Kombinationsregionen
     print(f"Diabetes Zeilen (vor Geo-Filter): {len(df_diab)}")
     mask_german = df_diab['clean_region'].apply(
         lambda x: (get_iso_code(x) is not None) or (x in config.COMBI_REGIONS)
@@ -248,20 +248,19 @@ def transform_data(df_diab, df_ges):
 
     df_ges_melted['wert'] = pd.to_numeric(df_ges_melted['wert'], errors='coerce')
 
-    # Zeit als Periode 2019-2020 anstatt von Jahr
+    ## Zeit als Periode 2019-2020 anstatt von Jahr 
     df_ges_melted['periode'] = '2019-2020'
     df_ges_melted['jahr'] = pd.NA 
 
-    # Dimensionen
-
-    # Dim Indikator
-    ## Diabetes
+    # Dimensionen erstellen
+    ## Dim Indikator
+    ### Diabetes
     df_diab_ind = df_diab[['Indikator_Name', 'Kennzahl_Definition', 'Handlungsfeld_Name']].drop_duplicates().copy()
     df_diab_ind.columns = ['name', 'einheit', 'hf_raw']
     df_diab_ind['handlungsfeld'] = df_diab_ind['hf_raw'].map(config.SHORT_INDIKATOR_MAPPING).fillna(df_diab_ind['hf_raw'])
     df_diab_ind['datenquellen'] = 'Diabetes Surveillance'
 
-    ## GEDA
+    ### GEDA
     df_ges_ind = df_ges_melted[['Variable', 'einheit']].drop_duplicates().copy()
     df_ges_ind['name'] = df_ges_ind['Variable'].apply(lambda x: config.GEDA_MAPPING.get(x, {}).get('name', x))
     df_ges_ind['handlungsfeld'] = df_ges_ind['Variable'].apply(lambda x: config.GEDA_MAPPING.get(x, {}).get('cat'))
@@ -273,7 +272,7 @@ def transform_data(df_diab, df_ges):
     ], ignore_index=True).drop_duplicates().reset_index(drop=True)
     dim_ind['indikator_id'] = range(1, len(dim_ind) + 1)
 
-    # Dim Geographie 
+    ## Dim Geographie 
     all_regions = set(df_diab['clean_region'].dropna()) | set(df_ges['clean_region'].dropna())
     dim_geo = pd.DataFrame({"name": sorted(list(all_regions))})
     dim_geo['iso_code'] = dim_geo['name'].apply(get_iso_code)
@@ -281,13 +280,13 @@ def transform_data(df_diab, df_ges):
     dim_geo['beschreibung'] = dim_geo.apply(get_geo_description, axis=1)
     dim_geo['geographie_id'] = range(1, len(dim_geo) + 1)
 
-    # Dim Bevölkerung
+    ## Dim Bevölkerung
     cols_bev = ['clean_gender', 'clean_age', 'clean_edu']
     dim_bev = pd.concat([df_diab[cols_bev], df_ges[cols_bev]], ignore_index=True).drop_duplicates().reset_index(drop=True)
     dim_bev.columns = ['geschlecht', 'altersgruppe', 'bildungsgruppe']
     dim_bev['bevoelkerung_id'] = range(1, len(dim_bev) + 1)
 
-    # Dim Zeit
+    ## Dim Zeit
     years_diab = sorted(set(pd.to_numeric(df_diab['Jahr'], errors='coerce').dropna().astype(int)))
     periods = ['2019-2020']  # aktuell nur GEDA
     dim_zeit = pd.DataFrame({
@@ -296,7 +295,7 @@ def transform_data(df_diab, df_ges):
     })
     dim_zeit['zeit_id'] = range(1, len(dim_zeit) + 1)
 
-    # Faktentabelle
+    # Faktentabelle erstellen
     def get_fk(df_data, df_dim, left_cols, right_cols, id_col_name):
         merged = df_data.merge(df_dim, left_on=left_cols, right_on=right_cols, how='left')
         return merged[id_col_name]
@@ -331,6 +330,7 @@ def transform_data(df_diab, df_ges):
     fact_geda['wert'] = df_ges_melted['wert']
     fact_geda['id'] = range(1, len(fact_geda) + 1)
 
+    ## Meldung bei fehlenden Fremdschlüsseln
     for fact_name, fact_df in [('fact_diabetes', fact_diabetes), ('fact_geda', fact_geda)]:
         for col in ['zeit_id', 'geographie_id', 'bevoelkerung_id', 'indikator_id']:
             missing = fact_df[col].isna().sum()
