@@ -50,6 +50,7 @@ Das Projekt ist **laufend**. Weitere Erweiterungen, einschließlich zusätzliche
 
 ```cmd
 docker compose up --build
+docker compose up --build service_name
 docker compose down
 ````
 
