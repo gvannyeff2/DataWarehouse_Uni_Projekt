@@ -47,57 +47,201 @@ GENDER_MAP = {
     'Männer': 'Männlich', 'Frauen': 'Weiblich'
 }
 
+## Mapping für Indikatoren (basiert auf Diabetes Survelliance)
+SHORT_INDIKATOR_MAPPING = {
+    'Handlungsfeld 1 - Diabetesrisiko reduzieren': 'Risiko',
+    'Handlungsfeld 2 - Diabetesfrüherkennung und -behandlung verbessern': 'Versorgung',
+    'Handlungsfeld 3 - Diabeteskomplikationen reduzieren': 'Erkrankung',
+    'Handlungsfeld 4 - Krankheitslast und Krankheitskosten senken': 'Lebensqualität',
+}
+
 ## Gesundheitsindikatoren aus GEDA
 GEDA_MAPPING = {
-    'AMarztB': 'Medikamenteneinnahme (ärztlich verordnet)',
-    'GVzahnsa_k': 'Mundgesundheit',
-    'IAarzt14B_k': 'Inanspruchnahme: Zahnmedizinische Versorgung',
-    'IAarzt1B_k': 'Inanspruchnahme: Allgemeinärztliche oder hausärztliche Versorgung',
-    'IAarzt8C': 'Inanspruchnahme: Psycholog:in',
-    'IAfa_k': 'Inanspruchnahme: Fachärztliche Versorgung',
-    'IAnotkhs': 'Inanspruchnahme: Notaufnahme im Krankenhaus',
-    'IAther2B': 'Inanspruchnahme: Physiotherapie',
-    'Iakhs': 'Inanspruchnahme: Stationäre Versorgung',
-    
-    'Akrausch': 'Alkohol: Rauschtrinken',
-    'Akrisiko_k': 'Alkohol: Riskanter Konsum',
-    'RCstatE_k3': 'Rauchen: Tabakprodukte',
-    'RCpass4B_k2': 'Rauchen: Passivrauchbelastung',
+    ### Handlungsfeld 1 - Diabetesrisiko reduzieren
+    'Akrausch': {
+        'name': 'Alkohol: Rauschtrinken', 
+        'cat': 'Risiko',
+    },
+    'Akrisiko_k': {
+        'name': 'Alkohol: Riskanter Konsum',
+        'cat': 'Risiko',
+    },
+    'RCstatE_k3': {
+        'name': 'Rauchen: Tabakprodukte',
+        'cat': 'Risiko',
+    },
+    'RCpass4B_k2': {
+        'name': 'Rauchen: Passivrauchbelastung',
+        'cat': 'Risiko',
+    },
+    'ENcolaBtgl': {
+        'name': 'Ernährung: Täglich zuckerhaltige Erfrischungsgetränke',
+        'cat': 'Risiko',
+    },
+    'ENobgemtgl': {
+        'name': 'Ernährung: Täglich Obst und Gemüse',
+        'cat': 'Risiko',
+    },
+    'ENgemDtgl': {
+        'name': 'Ernährung: Täglich Gemüse',
+        'cat': 'Risiko',
+    },
+    'ENobstDtgl': {
+        'name': 'Ernährung: Täglich Obst',
+        'cat': 'Risiko',
+    },
+    'EnsaftBtgl': {
+        'name': 'Ernährung: Täglich Obst- oder Gemüsesaft',
+        'cat': 'Risiko',
+    },
+    'PAadiposB': {
+        'name': 'Körpergewicht: Adipositas',
+        'cat': 'Risiko',
+    },
+    'PAueberB': {
+        'name': 'Körpergewicht: Übergewicht',
+        'cat': 'Risiko',
+    },
+    'PAnormalB': {
+        'name': 'Körpergewicht: Normalgewicht',
+        'cat': 'Risiko',
+    },
+    'PAunterB': {
+        'name': 'Körpergewicht: Untergewicht',
+        'cat': 'Risiko',
+    },
+    'KAarbeit': {
+        'name': 'Körperliche Aktivität: Arbeitsbezogene Aktivität',
+        'cat': 'Risiko',
+    },
+    'KAcyc1': {
+        'name': 'Körperliche Aktivität: Fahrradfahren von Ort zu Ort',
+        'cat': 'Risiko',
+    },
+    'KAwalk2': {
+        'name': 'Körperliche Aktivität: Zu Fuß gehen von Ort zu Ort',
+        'cat': 'Risiko',
+    },
+    'KAspo2': {
+        'name': 'Körperliche Aktivität: Freizeitbezogene Aktivität',
+        'cat': 'Risiko',
+    },
+    'KAgfmk': {
+        'name': 'Körperliche Aktivität: Muskelkräftigung',
+        'cat': 'Risiko',
+    },
+    'KAgfa': {
+        'name': 'Körperliche Aktivität: Ausdaueraktivität und Muskelkräftigung',
+        'cat': 'Risiko',
+    },
+    'KAgfkaB': {
+        'name': 'Körperliche Aktivität: Ausdaueraktivität',
+        'cat': 'Risiko',
+    },
 
-    'ENcolaBtgl': 'Ernährung: Täglich zuckerhaltige Erfrischungsgetränke',
-    'ENobgemtgl': 'Ernährung: Täglich Obst und Gemüse',
-    'ENgemDtgl': 'Ernährung: Täglich Gemüse',
-    'ENobstDtgl': 'Ernährung: Täglich Obst',
-    'EnsaftBtgl': 'Ernährung: Täglich Obst- oder Gemüsesaft',
+    # --- Handlungsfeld 2: Versorgung ---
+    'AMarztB': {
+        'name': 'Medikamenteneinnahme (ärztlich verordnet)',
+        'cat': 'Versorgung',
+    },
+    'IAhypus_k': {
+        'name': 'Vorsorge: Blutdruckmessung',
+        'cat': 'Versorgung',
+    },
+    'IAkfutyp4B_lz_k2': {
+        'name': 'Vorsorge: Darmspiegelung',
+        'cat': 'Versorgung',
+    },
+    'IAkfutyp2B_lz_k': {
+        'name': 'Vorsorge: Test auf Blut im Stuhl',
+        'cat': 'Versorgung',
+    },
+    'IAcholus_k': {
+        'name': 'Vorsorge: Blutfettwertebestimmung',
+        'cat': 'Versorgung',
+    },
+    'IAdiabus_k': {
+        'name': 'Vorsorge: Blutzuckermessung',
+        'cat': 'Versorgung',
+    },
+    'IAarzt14B_k': {
+        'name': 'Inanspruchnahme: Zahnmedizinische Versorgung',
+        'cat': 'Versorgung',
+    },
+    'IAarzt1B_k': {
+        'name': 'Inanspruchnahme: Allgemeinärztliche oder hausärztliche Versorgung',
+        'cat': 'Versorgung',
+    },
+    'IAarzt8C': {
+        'name': 'Inanspruchnahme: Psycholog:in',
+        'cat': 'Versorgung',
+    },
+    'IAfa_k': {
+        'name': 'Inanspruchnahme: Fachärztliche Versorgung',
+        'cat': 'Versorgung',
+    },
+    'IAnotkhs': {
+        'name': 'Inanspruchnahme: Notaufnahme im Krankenhaus',
+        'cat': 'Versorgung',
+    },
+    'IAther2B': {
+        'name': 'Inanspruchnahme: Physiotherapie',
+        'cat': 'Versorgung',
+    },
+    'Iakhs': {
+        'name': 'Inanspruchnahme: Stationäre Versorgung',
+        'cat': 'Versorgung',
+    },
 
-    'PAadiposB': 'Körpergewicht: Adipositas',
-    'PAueberB': 'Körpergewicht: Übergewicht',
-    'PAnormalB': 'Körpergewicht: Normalgewicht',
-    'PAunterB': 'Körpergewicht: Untergewicht',
-    'KAarbeit': 'Körperliche Aktivität: Arbeitsbezogene Aktivität',
-    'KAcyc1': 'Körperliche Aktivität: Fahrradfahren von Ort zu Ort',
-    'KAwalk2': 'Körperliche Aktivität: Zu Fuß gehen von Ort zu Ort',
-    'KAspo2': 'Körperliche Aktivität: Freizeitbezogene Aktivität',
-    'KAgfmk': 'Körperliche Aktivität: Muskelkräftigung',
-    'KAgfa': 'Körperliche Aktivität: Ausdaueraktivität und Muskelkräftigung',
-    'KAgfaB': 'Körperliche Aktivität: Ausdaueraktivität',
+    # --- Handlungsfeld 3: Erkrankung ---
+    'KHdiabB12': {
+        'name': 'Diagnose: Diabetes (12-Monats-Prävalenz)',
+        'cat': 'Erkrankung',
+    },
+    'KHab12': {
+        'name': 'Diagnose: Asthma',
+        'cat': 'Erkrankung',
+    },
+    'KHalgi112': {
+        'name': 'Diagnose: Allergien',
+        'cat': 'Erkrankung',
+    },
+    'KHBBsa12': {
+        'name': 'Diagnose: Schlaganfall',
+        'cat': 'Erkrankung',
+    },
+    'KHcb12B': {
+        'name': 'Diagnose: Chronische Bronchitis (COPD)',
+        'cat': 'Erkrankung',
+    },
+    'KHdge12': {
+        'name': 'Diagnose: Arthrose',
+        'cat': 'Erkrankung',
+    },
+    'KHmyokhk12': {
+        'name': 'Diagnose: Koronare Herzerkrankung',
+        'cat': 'Erkrankung',
+    },
+    'PKPHQ8_k6': {
+        'name': 'Depressive Symptomatik (PHQ-8)',
+        'cat': 'Erkrankung',
+    },
 
-    'KHBBsa12': 'Schlaganfall',
-    'IAhypus_k': 'Vorsorge: Blutdruckmessung',
-    'IAkfutyp4B_lz_k2': 'Vorsorge: Darmspiegelung',
-    'IAkfutyp2B_lz_k': 'Vorsorge: Test auf Blut im Stuhl',
-    'IAcholus_k': 'Vorsorge: Blutfettwertebestimmung',
-    'IAdiabus_k': 'Vorsorge: Blutzuckermessung',
-    'KHab12': 'Asthma',
-    'KAgfkaB': 'Körperliche Aktivität: Ausdaueraktivität',
-    'KHalgi112': 'Allergien',
-    'KHcb12B': 'Chronische Bronchitis (COPD)',
-    'KHdge12': 'Arthrose',
-    'KHdiabB12': 'Diabetes',
-    'KHmyokhk12': 'Koronare Herzerkrankung',
-    'GZmehm1_k': 'Subjektive Gesundheit',
-    
-    'PKPHQ8_k6': 'Depressive Symptomatik (PHQ-8)',
-    'GZmehm2D_k3': 'Einschränkung durch Krankheit',
-    'GZmehm3C': 'Chronische Krankheit',
+    # --- Handlungsfeld 4: Lebensqualität ---
+    'GZmehm1_k': {
+        'name': 'Status: Subjektive Gesundheit',
+        'cat': 'Lebensqualität',
+    },
+    'GZmehm2D_k3': {
+        'name': 'Status: Einschränkung durch Krankheit',
+        'cat': 'Lebensqualität',
+    },
+    'GZmehm3C': {
+        'name': 'Status: Vorliegen einer chronischen Krankheit',
+        'cat': 'Lebensqualität',
+    },
+    'GVzahnsa_k': {
+        'name': 'Status: Mundgesundheit',
+        'cat': 'Lebensqualität',
+    },
 }
