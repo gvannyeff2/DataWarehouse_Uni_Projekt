@@ -31,20 +31,15 @@ Die inhaltliche Verantwortung für die Originaldaten liegt beim Robert Koch-Inst
 - Speicherung der bereinigten Daten in einer PostgreSQL-Datenbank  
 - Geplante Integration von Power BI zur Datenanalyse und -visualisierung
 
-## Status
-Das Projekt ist **laufend**. Weitere Erweiterungen, einschließlich zusätzlicher Transformationen und Power-BI-Dashboards, sind geplant.
-
 ## ER-Diagramm
 
-### Version 2 
-![ERD](Documentations/erd_ver2.png)
+![ERD](Documentations/erd_final.png)
 
-**Änderung:** Dim_Region mit Dim_Geographie ersetzt. Grund dafür ist, dass die Quellen enthalten nicht nur Regionen sondern auch Ländern und Kombination von mehrere Regionen in Deutschland. (Info: https://github.com/robert-koch-institut/Diabetes-Surveillance/tree/main?tab=readme-ov-file#Regionalcodes)
+## Visualisierung
 
-### Version 1
-![ERD](Documentations/erd.png)
-
-## Architekturdiagramm
+![Seite1](Visualisierung_powerbi/images/geschlecht_page.png)
+![Seite2](Visualisierung_powerbi/images/lebensstill_page.png)
+![Seite3](Visualisierung_powerbi/images/screening_page.png)
 
 ## Wichtige Befehle zum Ausführen
 
