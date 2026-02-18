@@ -6,13 +6,36 @@ Dieses Repository enthält ein Data-Warehouse-Projekt, das im Rahmen eines Unive
 
 ---
 ## Projektziel
-- Integration von mindestens zwei medizinischen Datenquellen  
+
+Ziel des Projekts ist die Entwicklung eines Data Warehouses zur Analyse diabetesbezogener Gesundheitsindikatoren in Deutschland.
+
+Konkret wurden:
+- Zwei medizinische Datenquellen integriert
 - Konzeption eines Data-Warehouse-Schemas (Star Schema)  
 - Implementierung einer automatisierten ETL-Pipeline  
 - Speicherung der Daten in einer PostgreSQL-Datenbank  
-- Vorbereitung analytischer Auswertungen (z.B. mit Power BI)
+- Explorative Analysen und Visualisierungen mit Power BI erstellt
 
----
+## Fachlicher Analysefokus
+
+Im Mittelpunkt des Projekts steht die explorative Analyse möglicher Zusammenhänge zwischen:
+
+- Diabetesprävalenz
+- Lebensstilfaktoren (z.B. körperliche Inaktivität, Adipositas)
+- Screening-Verhalten
+- diabetesbezogenen Komplikationen (z.B. Amputationsraten)
+- soziodemografischen Merkmalen (Geschlecht, Altersgruppe, Bildung)
+- regionalen Unterschieden (Bundesländer)
+
+Die Daten wurden harmonisiert, aggregiert und so strukturiert, dass analytische Fragestellungen über mehrere Dimensionen hinweg möglich sind.
+
+Beispielhafte Analysefragen:
+
+- Gibt es geschlechtsspezifische Unterschiede in der Diabetesprävalenz?
+- Besteht ein Zusammenhang zwischen Lebensstilindikatoren und Komplikationsraten?
+- Unterscheiden sich Screening-Raten regional?
+- Lassen sich Korrelationen zwischen Risikofaktoren und Versorgungsindikatoren erkennen?
+
 ## Datenquellen
 Die verwendeten Rohdaten stammen aus öffentlich zugänglichen Repositorien des **Robert Koch-Institut (RKI)**:
 
@@ -30,9 +53,14 @@ Die verwendeten Rohdaten stammen aus öffentlich zugänglichen Repositorien des 
 
 *Die inhaltliche Verantwortung für die Originaldaten liegt beim Robert Koch-Institut (RKI).*
 
-Die Daten wurden im Rahmen dieses universitären Data-Warehouse-Projekts extrahiert, transformiert und in ein eigenes Datenbankschema überführt (ETL-Prozess). Dabei erfolgten insbesondere Bereinigungen, Strukturtransformationen sowie Aggregationen zur analytischen Auswertung.
+Im Rahmen dieses Projekts wurden die Daten extrahiert, transformiert und in ein eigenes Data-Warehouse-Schema überführt (ETL-Prozess). Dabei erfolgten:
 
----
+- Bereinigung inkonsistenter Werte
+- Harmonisierung von Altersdefinitionen
+- Vereinheitlichung von Geschlechtsangaben
+- Aggregationen auf Bundeslandebene
+- Berechnung zusätzlicher Analysekennzahlen (z.B. kombinierte Risikoindikatoren, Korrelationen)
+
 ## Projektüberblick
 
 **Technischer Stack**
@@ -41,9 +69,10 @@ Die Daten wurden im Rahmen dieses universitären Data-Warehouse-Projekts extrahi
 - Docker & Docker Compose (Containerisierung/Orchestrierung)
 - pandas
 - SQLAlchemy/psycopg2
-- Power BI (für Visualisierung)
+- Power BI (Visualisierung und Analyse)
 
 **ETL-Architektur**
+
 Die ETL-Pipeline ist modular aufgebaut:
 
 1. **Extract**  
@@ -63,7 +92,6 @@ Die ETL-Pipeline ist modular aufgebaut:
 
 Einstiegspunkt der Anwendung ist ``main.py``
 
----
 ## Umfang
 - Analyse von Rohdaten zur Identifikation relevanter Felder und Strukturen  
 - Konzeption eines Data-Warehouse-Schemas inkl. ER-Diagramm  
@@ -86,21 +114,34 @@ Das Data Warehouse folgt einem Star-Schema mit:
 ## Visualisierung (Power BI – Beispielseiten)
 
 **Auswertung 1: Geschlechtsspezifische Analyse**
+
 ![Seite1](Visualisierung_powerbi/images/geschlecht_page.png)
 
+- Vergleich der Diabetesprävalenz nach Geschlecht
+- Darstellung geschlechtsspezifischer Unterschiede in Screening-Raten
+- Analyse möglicher Korrelationen zwischen Risikofaktoren und Prävalenz
+
 **Auswertung 2: Lebensstilbezogene Analyse**
+
+- Zusammenhang zwischen körperlicher Inaktivität und Diabetesindikatoren
+- Vergleich von Adipositasraten und Komplikationsindikatoren
+- Regionale Unterschiede im Risikoprofil
+
 ![Seite2](Visualisierung_powerbi/images/lebensstill_page.png)
 
 **Auswertung 3: Screening-Analyse**
+
+- Screening-Raten nach Bundesland
+- Zusammenhang zwischen Screening und Amputationsraten
+- Explorative Korrelationsanalyse zwischen Versorgungs- und Outcome-Indikatoren
+
 ![Seite3](Visualisierung_powerbi/images/screening_page.png)
 
----
 ## Voraussetzungen
 
 Zur lokalen Ausführung werden benötigt: 
 - Docker und Docker Compose 
 - Internetzugang (für den Download der Rohdaten aus den RKI-Repos)
----
 
 ## Konfiguration
 
@@ -130,8 +171,6 @@ Die Zeitzone wird im Dockerfile gesetzt:
 ENV TZ=Europe/Berlin
 ```
 Dadurch entspricht die Ausführungszeit der deutschen Zeit ink. Sommer- und Winterzeit.
-
----
 
 ## Anpassung der Cron-Zeit
 
@@ -189,5 +228,6 @@ Die Logs werden im Container kontinuierlich ausgegeben.
 ```
 
 ## Lizenz
-- Der Quellcode wurde im Rahmen eines universitären Projekts erstellt.
-- Die verwendeten Rohdaten unterliegen der Lizenz CC BY 4.0 (Robert Koch-Institut).
+Dieses Projekt steht unter der [MIT-Lizenz](https://opensource.org/license/MIT).
+
+Die verwendeten Rohdaten stammen vom Robert Koch-Institut (RKI) und unterliegen der Lizenz Creative Commons Attribution 4.0 International (CC BY 4.0). Die entsprechenden Quellen- und Lizenzangaben sind im Abschnitt „Datenquellen“ dokumentiert.
