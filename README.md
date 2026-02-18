@@ -33,7 +33,7 @@ Die inhaltliche Verantwortung für die Originaldaten liegt beim Robert Koch-Inst
 
 ## ER-Diagramm
 
-![ERD](Documentations/erd_final.png)
+![ERD](Documentations/erd.png)
 
 ## Visualisierung
 
