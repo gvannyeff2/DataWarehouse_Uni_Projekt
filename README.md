@@ -37,8 +37,13 @@ Die inhaltliche Verantwortung für die Originaldaten liegt beim Robert Koch-Inst
 
 ## Visualisierung
 
+**Auswertung 1**
 ![Seite1](Visualisierung_powerbi/images/geschlecht_page.png)
+
+**Auswertung 2**
 ![Seite2](Visualisierung_powerbi/images/lebensstill_page.png)
+
+**Auswertung 3**
 ![Seite3](Visualisierung_powerbi/images/screening_page.png)
 
 ## Wichtige Befehle zum Ausführen
