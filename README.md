@@ -1,4 +1,4 @@
-# Data-Warehouse-Projekt (Universitätsprojekt)
+# Data Warehouse zur Analyse diabetesbezogener Gesundheitsindikatoren in Deutschland
 
 Dieses Repository enthält ein Data-Warehouse-Projekt, das im Rahmen eines Universitätskurses im Masterstudium **Medical Data Science** entwickelt wurde.
 
